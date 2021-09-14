@@ -24,10 +24,10 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet publish
+      run: dotnet publish MinMaNet.API/MinMaNet.API.csproj -c Release -o release --nologo
 
     - name: Upload WebApp1 Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: MinmaNet_Published
-        path: /home/runner/work/MinmaNet/MinmaNet/MinMaNet.Tests/bin/Debug/net5.0/publish/
+        path: /home/runner/work/MinmaNet/MinmaNet/MinMaNet.API/bin/Debug/net5.0/publish/
