@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MinMaNet.API.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,12 +27,11 @@ namespace MinMaNet.API
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-
 			services.AddControllers();
-			services.AddSwaggerGen(c =>
-			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinMaNet.API", Version = "v1" });
-			});
+
+			services.AddCORSConfiguration();
+
+			services.AddSwaggerConfiguration();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,11 +42,9 @@ namespace MinMaNet.API
 				app.UseDeveloperExceptionPage();
 			}
 
-			app.UseSwagger();
-			app.UseSwaggerUI(c => {
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "MinMaNet.API v1");
-				c.RoutePrefix = "";
-			});
+			app.ConfigureSwaggerConfiguration();
+
+			app.EnableCORS();
 
 			app.UseHttpsRedirection();
 
