@@ -34,8 +34,10 @@ jobs:
     - name: Display structure of downloaded files
       run: ls -R
 
-    - name: Download Build Artifact
-      uses: actions/download-artifact@v2
+    - name: Commit release to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
-        name: MinmaNet_Published 
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: release
+        FOLDER: release
     
