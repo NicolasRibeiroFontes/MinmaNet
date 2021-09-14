@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.IO;
-using System.Reflection;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace MinMaNet.API.Configurations
 {
@@ -13,7 +11,18 @@ namespace MinMaNet.API.Configurations
 		{
 			services.AddSwaggerGen(c =>
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinMaNet.API", Version = "v1" });
+				c.SwaggerDoc("v1", new OpenApiInfo
+				{
+					Version = "v1",
+					Title = "MinMaNet",
+					Description = "Welcome to MinMaNet! This is an open source tool to generate software code based on Mind Maps of external tools/website which has the functionality to export mind maps in specific formats.",										
+					Contact = new OpenApiContact
+					{
+						Name = "Repository on Github",
+						Email = string.Empty,
+						Url = new Uri("https://github.com/NicolasRibeiroFontes/MinmaNet"),
+					}					
+				});
 			});
 		}
 
