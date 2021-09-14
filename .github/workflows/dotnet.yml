@@ -31,8 +31,11 @@ jobs:
       with:
         name: MinmaNet_Published
         path: /home/runner/work/MinmaNet/MinmaNet/release/
-    - uses: actions/download-artifact@v2
-      with:
-        name: MinmaNet_Published 
     - name: Display structure of downloaded files
       run: ls -R
+
+    - name: Download Build Artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: MinmaNet_Published 
+    
