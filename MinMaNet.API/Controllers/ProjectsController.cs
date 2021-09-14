@@ -11,5 +11,10 @@ namespace MinMaNet.API.Controllers
 	[ApiController]
 	public class ProjectsController : ControllerBase
 	{
+		[HttpGet("welcome")]
+		public IActionResult Welcome()
+		{
+			return Ok("Welcome!!");
+		}
 	}
 }
