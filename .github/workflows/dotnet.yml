@@ -31,8 +31,6 @@ jobs:
       with:
         name: MinmaNet_Published
         path: /home/runner/work/MinmaNet/MinmaNet/release/
-    - name: Display structure of downloaded files
-      run: ls -R
 
     - name: Commit release to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
@@ -40,4 +38,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: release
         FOLDER: release
-    
+
+    # Download Artifact #1 and verify the correctness of the content
+    - name: 'Download artifact #1'
+      uses: actions/download-artifact@v1
+      with:
+        name: 'MinmaNet_Published'
+        path: newfolder
+
+    - name: Display structure of downloaded files
+      run: ls -R
