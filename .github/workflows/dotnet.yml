@@ -26,8 +26,8 @@ jobs:
     - name: Publish
       run: dotnet publish MinMaNet.API/MinMaNet.API.csproj -c Release -o release --nologo
 
-    - name: Upload WebApp1 Build Artifact
+    - name: Upload Build Artifact
       uses: actions/upload-artifact@v2
       with:
         name: MinmaNet_Published
-        path: /home/runner/work/MinmaNet/MinmaNet/MinMaNet.API/bin/Debug/net5.0/publish/
+        path: /home/runner/work/MinmaNet/MinmaNet/release/
