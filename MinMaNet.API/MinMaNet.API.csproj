@@ -8,4 +8,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MinMaNet.Domain\MinMaNet.Domain.csproj" />
+    <ProjectReference Include="..\MinMaNet.Reader\MinMaNet.Reader.csproj" />
+  </ItemGroup>
+
 </Project>
