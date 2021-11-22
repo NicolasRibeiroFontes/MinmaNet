@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
-namespace MinMaNet.Reader
+namespace MinMaNet.Reader.Tools
 {
     public class MindMapsAppService : ReaderService
 	{

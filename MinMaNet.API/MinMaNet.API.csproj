@@ -1,16 +1,28 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MinMaNet.Domain\MinMaNet.Domain.csproj" />
-    <ProjectReference Include="..\MinMaNet.Reader\MinMaNet.Reader.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MinMaNet.Domain\MinMaNet.Domain.csproj" />
+		<ProjectReference Include="..\MinMaNet.Generator\MinMaNet.Generator.csproj" />
+		<ProjectReference Include="..\MinMaNet.Reader\MinMaNet.Reader.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Resources\**" />
+		<Content Remove="Resources\**" />
+		<EmbeddedResource Remove="Resources\**" />
+		<None Remove="Resources\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\" />
+	</ItemGroup>
 
 </Project>

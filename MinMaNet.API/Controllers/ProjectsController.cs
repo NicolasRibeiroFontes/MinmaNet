@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MinMaNet.Domain.Core;
 using MinMaNet.Domain.Enums;
 using MinMaNet.Domain.Interfaces;
-using MinMaNet.Reader;
+using MinMaNet.Generator.Languages;
+using MinMaNet.Reader.Tools;
 using System;
 using System.Threading.Tasks;
 
@@ -14,10 +15,12 @@ namespace MinMaNet.API.Controllers
 	public class ProjectsController : ControllerBase
 	{
 		private IReader reader;
+		private IGenerator generator;
 
-		public ProjectsController(IReader reader)
+		public ProjectsController(IReader reader, IGenerator generator)
 		{
 			this.reader = reader;
+			this.generator = generator;
 		}
 
 		[HttpGet("welcome")]
@@ -32,15 +35,26 @@ namespace MinMaNet.API.Controllers
 			if (file == null)
 				return BadRequest("File not uploaded");
 
-			IdentitySourceTool(parameters.Tool);
+			IdentifySourceTool(parameters.Tool);
+			IdentifyLanguage(parameters.Tool);
 
-			return Ok(await reader.GenerateCommonModelFromJsonFile(file));
+			var project = await reader.GenerateCommonModelFromJsonFile(file);
+			generator.Generate(project);
+
+			return Ok(project);
 		}
 
-		private void IdentitySourceTool(MindMapSourceTools sourceTool) =>
+		private void IdentifySourceTool(MindMapSourceTools sourceTool) =>
 			reader = sourceTool switch
 			{
 				MindMapSourceTools.MindMapsApp => new MindMapsAppService(),
+				_ => throw new NotSupportedException("Source Tool not identified"),
+			};
+
+		private void IdentifyLanguage(MindMapSourceTools sourceTool) =>
+			generator = sourceTool switch
+			{
+				MindMapSourceTools.MindMapsApp => new CSharpService(),
 				_ => throw new NotSupportedException("Source Tool not identified"),
 			};
 	}
