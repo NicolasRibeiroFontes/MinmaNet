@@ -10,7 +10,7 @@ namespace MinMaNet.Generator
     {
         private static readonly string folderName = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Projects");
 
-        public virtual void Generate(Project project)
+        public virtual string Generate(Project project)
         {
             throw new NotSupportedException();
         }
@@ -30,7 +30,7 @@ namespace MinMaNet.Generator
                 }
             });
 
-            return "";
+            return path;
         }
 
         private static string GetFilePath(string path, string module, string project)

@@ -39,9 +39,9 @@ namespace MinMaNet.API.Controllers
 			IdentifyLanguage(parameters.Tool);
 
 			var project = await reader.GenerateCommonModelFromJsonFile(file);
-			generator.Generate(project);
+			var filePath = generator.Generate(project);
 
-			return Ok(project);
+			return Ok(filePath);
 		}
 
 		private void IdentifySourceTool(MindMapSourceTools sourceTool) =>

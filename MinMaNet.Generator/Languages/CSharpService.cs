@@ -5,7 +5,7 @@ namespace MinMaNet.Generator.Languages
 {
     public class CSharpService : GeneratorService
     {
-        public override void Generate(Project project)
+        public override string Generate(Project project)
         {
             List<string> classes = new();
 
@@ -18,7 +18,9 @@ namespace MinMaNet.Generator.Languages
                 classes.Add(module.Replace("_properties_", properties.ToString()));
             });
 
-            GenerateFiles(project.Title, classes);
+            var filePath = GenerateFiles(project.Title, classes);
+
+            return filePath;
         }
 
         private static void GenerateProperties(List<Property> properties, out string propertiesGenerated)
@@ -28,12 +30,10 @@ namespace MinMaNet.Generator.Languages
              propertiesGenerated += PropertiesModel.Replace("_type_", property.Type).Replace("_name_", property.Title);
         }
 
-        private static string EntityModel => $"using System;\n\nnamespace _projectname_.Entities\n" +
-            "{\n" +
+        private static string EntityModel => "using System;\n\nnamespace _projectname_.Entities\n{\n" +
             "public class _title_\n{\n" +
             "_properties_" +
             "}\n}";
-        private static string PropertiesModel => $"public _type_ _name_" +
-            " { get; set; }\n";
+        private static string PropertiesModel => "public _type_ _name_ { get; set; }\n";
     }
 }
