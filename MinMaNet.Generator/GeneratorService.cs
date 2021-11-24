@@ -19,16 +19,9 @@ namespace MinMaNet.Generator
         {
             string path = CreateFolder(project + "\\Entities", folderName);
 
-            classes.ForEach(module =>
-            {
-                string filePath = GetFilePath(path, module, project);
+            classes.ForEach(module => IOService.GenerateFile(GetFilePath(path, module, project), module));
 
-                if (!File.Exists(filePath))
-                {
-                    using StreamWriter sw = File.CreateText(filePath);
-                    sw.WriteLine(module.AsSpan(0, module.Length - 0));
-                }
-            });
+            IOService.ZipFiles(folderName, project);
 
             return path;
         }
