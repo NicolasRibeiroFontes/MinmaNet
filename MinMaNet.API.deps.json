@@ -9,6 +9,7 @@
       "MinMaNet.API/1.0.0": {
         "dependencies": {
           "MinMaNet.Domain": "1.0.0",
+          "MinMaNet.Generator": "1.0.0",
           "MinMaNet.Reader": "1.0.0",
           "Swashbuckle.AspNetCore": "6.2.3"
         },
@@ -85,6 +86,14 @@
         },
         "runtime": {
           "MinMaNet.Domain.dll": {}
+        }
+      },
+      "MinMaNet.Generator/1.0.0": {
+        "dependencies": {
+          "MinMaNet.Domain": "1.0.0"
+        },
+        "runtime": {
+          "MinMaNet.Generator.dll": {}
         }
       },
       "MinMaNet.Reader/1.0.0": {
@@ -175,6 +184,11 @@
       "hashPath": "system.io.pipelines.5.0.1.nupkg.sha512"
     },
     "MinMaNet.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MinMaNet.Generator/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
