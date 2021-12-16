@@ -15,13 +15,16 @@ namespace MinMaNet.Generator
             }
         }
 
-        internal static void ZipFiles(string path, string projectName)
+        internal static string ZipFiles(string path, string projectName)
         {
             var filePath = path + "\\" + projectName;
             if (File.Exists(filePath + ".zip"))
                 File.Delete(filePath + ".zip");
 
+
             ZipFile.CreateFromDirectory(filePath, filePath + ".zip");
+
+            return filePath + ".zip";
         }
     }
 }
