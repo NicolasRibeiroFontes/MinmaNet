@@ -19,18 +19,21 @@ namespace MinMaNet.Generator
         {
             string path = CreateFolder(project + "\\Entities", folderName);
 
-            classes.ForEach(module =>
-            {
-                string filePath = GetFilePath(path, module, project);
+            classes.ForEach(module => IOService.GenerateFile(GetFilePath(path, module, project), module));
 
-                if (!File.Exists(filePath))
-                {
-                    using StreamWriter sw = File.CreateText(filePath);
-                    sw.WriteLine(module.AsSpan(0, module.Length - 0));
-                }
-            });
+            path = IOService.ZipFiles(folderName, project);
+
+            path = GetZipPath(path);
 
             return path;
+        }
+
+        private static string GetZipPath(string path)
+        {
+            var folders = path.Split("\\");
+            var indexFolderResource = Array.FindIndex(folders, s => s.ToLower().Equals("resources"));
+
+            return string.Join("\\", folders, indexFolderResource, 3);
         }
 
         private static string GetFilePath(string path, string module, string project)

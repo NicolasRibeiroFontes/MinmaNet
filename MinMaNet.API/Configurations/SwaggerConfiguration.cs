@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
+using System.IO;
+using System.Reflection;
 
 namespace MinMaNet.API.Configurations
 {
@@ -15,14 +17,19 @@ namespace MinMaNet.API.Configurations
 				{
 					Version = "v1",
 					Title = "MinMaNet",
-					Description = "Welcome to MinMaNet! This is an open source tool to generate software code based on Mind Maps of external tools/website which has the functionality to export mind maps in specific formats.",										
+					Description = "Welcome to MinMaNet! This is an open source tool to generate software code based on Mind Maps of external tools/website which has the functionality to export mind maps in specific formats.",
 					Contact = new OpenApiContact
 					{
 						Name = "Repository on Github",
 						Email = string.Empty,
 						Url = new Uri("https://github.com/NicolasRibeiroFontes/MinmaNet"),
-					}					
+					}
 				});
+
+				var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+				var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+				c.IncludeXmlComments(xmlPath);
+				c.DescribeAllParametersInCamelCase();
 			});
 		}
 

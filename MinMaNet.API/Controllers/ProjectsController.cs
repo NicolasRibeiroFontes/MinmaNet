@@ -23,12 +23,12 @@ namespace MinMaNet.API.Controllers
 			this.generator = generator;
 		}
 
-		[HttpGet("welcome")]
-		public IActionResult Welcome()
-		{
-			return Ok("Welcome!!");
-		}
-
+		/// <summary>
+		/// Endpoint to generate a zip file with the models created
+		/// </summary>
+		/// <param name="parameters"></param>
+		/// <param name="file">JSON file from the Mind Map tools</param>
+		/// <returns>An URL to download the zip file with the files created.</returns>
 		[HttpPost]
 		public async Task<IActionResult> Generate([FromQuery] GenerateParameters parameters, IFormFile file)
 		{
@@ -41,8 +41,10 @@ namespace MinMaNet.API.Controllers
 			var project = await reader.GenerateCommonModelFromJsonFile(file);
 			var filePath = generator.Generate(project);
 
-			return Ok(filePath);
+			return Ok(GetFilePathToDownload(filePath));
 		}
+
+		private string GetFilePathToDownload(string filePath) => $"{Request.Scheme}://{Request.Host.Value}/" + filePath;
 
 		private void IdentifySourceTool(MindMapSourceTools sourceTool) =>
 			reader = sourceTool switch

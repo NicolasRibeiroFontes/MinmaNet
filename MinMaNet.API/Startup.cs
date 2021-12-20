@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using MinMaNet.API.Configurations;
+using System.IO;
 
 namespace MinMaNet.API
 {
@@ -41,6 +43,13 @@ namespace MinMaNet.API
 			app.EnableCORS();
 
 			app.UseHttpsRedirection();
+
+			app.UseStaticFiles(new StaticFileOptions
+			{
+				FileProvider = new PhysicalFileProvider(
+			Path.Combine(env.ContentRootPath, "Resources")),
+				RequestPath = "/Resources"
+			});
 
 			app.UseRouting();
 
