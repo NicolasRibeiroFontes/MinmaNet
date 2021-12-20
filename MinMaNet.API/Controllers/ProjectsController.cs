@@ -16,18 +16,11 @@ namespace MinMaNet.API.Controllers
 	{
 		private IReader reader;
 		private IGenerator generator;
-		private static string url = string.Empty;
 
 		public ProjectsController(IReader reader, IGenerator generator)
 		{
 			this.reader = reader;
 			this.generator = generator;
-		}
-
-		[HttpGet("welcome")]
-		public IActionResult Welcome()
-		{
-			return Ok("Welcome!!");
 		}
 
 		/// <summary>
@@ -47,11 +40,12 @@ namespace MinMaNet.API.Controllers
 
 			var project = await reader.GenerateCommonModelFromJsonFile(file);
 			var filePath = generator.Generate(project);
-			url = $"{Request.Scheme}://{Request.Host.Value}/";
 
-			return Ok(url + filePath);
+			return Ok(GetFilePathToDownload(filePath));
 		}
-			
+
+		private string GetFilePathToDownload(string filePath) => $"{Request.Scheme}://{Request.Host.Value}/" + filePath;
+
 		private void IdentifySourceTool(MindMapSourceTools sourceTool) =>
 			reader = sourceTool switch
 			{
