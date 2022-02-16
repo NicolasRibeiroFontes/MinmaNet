@@ -15,9 +15,9 @@ namespace MinMaNet.Generator
             throw new NotSupportedException();
         }
 
-        protected static string GenerateFiles(string project, List<string> classes)
+        protected static string GenerateFiles(string project, string folder, List<string> classes)
         {
-            string path = CreateFolder(project + "\\Entities", folderName);
+            string path = CreateFolder(project + folder, folderName);
 
             classes.ForEach(module => IOService.GenerateFile(GetFilePath(path, module, project), module));
 
@@ -39,8 +39,8 @@ namespace MinMaNet.Generator
         private static string GetFilePath(string path, string module, string project)
         {
             var publicClass = "public class ";
-            int index = module.IndexOf(publicClass);
-            int indexAfterName = module.IndexOf("\n{",index);
+            int index = module.LastIndexOf(publicClass);
+            int indexAfterName = module.IndexOf(" ", index + publicClass.Length);
             string moduleName = module[(index + publicClass.Length)..indexAfterName];
             return path + "/" + moduleName + ".cs";
         }
