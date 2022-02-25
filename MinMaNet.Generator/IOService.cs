@@ -8,11 +8,11 @@ namespace MinMaNet.Generator
     {
         internal static void GenerateFile(string filePath, string content)
         {
-            if (!File.Exists(filePath))
-            {
+            if (File.Exists(filePath))
+                File.Delete(filePath);
+
                 using StreamWriter sw = File.CreateText(filePath);
                 sw.WriteLine(content.AsSpan(0, content.Length - 0));
-            }
         }
 
         internal static string ZipFiles(string path, string projectName)
