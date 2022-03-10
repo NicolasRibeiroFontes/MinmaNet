@@ -11,6 +11,7 @@ namespace MinMaNet.Generator.Languages
             List<string> controllers = new();
             string dbSets = string.Empty;
             List<string> mappings = new();
+            List<string> repositories = new();
 
             project.Classes.ForEach(eachClass =>
             {
@@ -27,6 +28,8 @@ namespace MinMaNet.Generator.Languages
                 dbSets += DbSetsContextModel.Replace("_entity_", eachClass.Title);
 
                 mappings.Add(MappingModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
+
+                repositories.Add(RepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
             });
 
             string context = DbContextModel.Replace("_projectname_", project.Title).Replace("_dbSets_", dbSets);
@@ -35,6 +38,7 @@ namespace MinMaNet.Generator.Languages
             GenerateFiles(project.Title, "\\Generate\\Controllers", controllers);
             GenerateFiles(project.Title, "\\Generate\\Context", new List<string>() { context });
             GenerateFiles(project.Title, "\\Generate\\Mappings", mappings);
+            GenerateFiles(project.Title, "\\Generate\\Repositories", repositories);
 
             return filePathEntity;
         }
@@ -79,5 +83,15 @@ namespace MinMaNet.Generator.Languages
             "using _projectname_.Entities;\n\nnamespace _projectname_.Infra.Mapping\n{\n" +
             "public class _entity_Mapping : IEntityTypeConfiguration<_entity_>\n{\n" +
             "public void Configure(EntityTypeBuilder<_entity_> builder)\n{\nbuilder.HasKey(key => key.Id);\n}\n}\n}";
+
+        private static string RepositoryModel => "using Microsoft.EntityFrameworkCore;\nusing _projectname_.Entities;\nusing _projectname_.Infra.Context;\n\n" +
+            "namespace _projectname_.Infra.Repositories\n{\npublic class _entity_Repository : I_entity_Repository\n{\nprivate readonly DBContext context;\n\n" +
+            "public _entity_Repository(DBContext context)\n{\nthis.context = context;\n}\n\npublic _entity_ Create(_entity_ model)\n{\n" +
+            "this.context._entity_s.Add(model);\nthis.context.SaveChanges();\nreturn model;\n}\n\n" +
+            "public _entity_? Get(int id)\n{\nreturn context._entity_s.FirstOrDefault(x => x.Id == id);\n}\n\n" +
+            "public IQueryable<_entity_> Get()\n{\nreturn context._entity_s;\n}\n\n" +
+            "public _entity_ Update(_entity_ model)\n{\nvar entry = context.Entry(model);\nthis.context._entity_s.Attach(model);\n" +
+            "entry.State = EntityState.Modified;\ncontext.SaveChanges();\nreturn model;\n}\n\n" +
+            "public void Delete(_entity_ model)\n{\ncontext._entity_s.Remove(user);\ncontext.SaveChanges();\n}\n}\n}";
     }
 }
