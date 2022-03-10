@@ -40,15 +40,23 @@ namespace MinMaNet.Generator.Languages
 
             string context = DbContextModel.Replace("_projectname_", project.Title).Replace("_dbSets_", dbSets);
 
-            var filePathEntity = GenerateFiles(project.Title, "\\Generate\\Entities", classes);
-            GenerateFiles(project.Title, "\\Generate\\Controllers", controllers);
-            GenerateFiles(project.Title, "\\Generate\\Context", new List<string>() { context });
-            GenerateFiles(project.Title, "\\Generate\\Mappings", mappings);
-            GenerateFiles(project.Title, "\\Generate\\Repositories", repositories);
-            GenerateFiles(project.Title, "\\Generate\\Interfaces", interfaceRepositories);
+            var filePathEntity = GenerateFiles(project.Title, "\\Generate\\Domain\\Entities", classes);
+            GenerateFiles(project.Title, "\\Generate\\API\\Controllers", controllers);
+            GenerateFiles(project.Title, "\\Generate\\Infra\\Context", new List<string>() { context });
+            GenerateFiles(project.Title, "\\Generate\\Infra\\Mappings", mappings);
+            GenerateFiles(project.Title, "\\Generate\\Infra\\Repositories", repositories);
+            GenerateFiles(project.Title, "\\Generate\\Domain\\Interfaces", interfaceRepositories);
+
+            GenerateFiles(project.Title, "\\Generate\\Domain", new List<string>() { CsProjDomainXML }, project.Title+".Domain.csproj");
+            GenerateFiles(project.Title, "\\Generate\\Infra", new List<string>() { CsProjInfraXML }, project.Title + ".Infra.csproj");
+
+
+            filePathEntity = GetZipPath(filePathEntity);
 
             return filePathEntity;
         }
+
+
 
         private static void GenerateProperties(List<Property> properties, out string propertiesGenerated)
         {
@@ -61,6 +69,7 @@ namespace MinMaNet.Generator.Languages
             "public class _title_ \n{\n" +
             "_properties_" +
             "}\n}";
+
         private static string PropertiesModel => "public _type_ _name_ { get; set; }\n";
 
         private static string ControllerModel => "using Microsoft.AspNetCore.Http;\nusing Microsoft.AspNetCore.Mvc;\n" +
@@ -104,5 +113,21 @@ namespace MinMaNet.Generator.Languages
         public static string IRepositoryModel => "using _projectname_.Entities;\n\nnamespace _projectname_.Infra.Interfaces\n{\n" +
             "public interface I_entity_Repository \n{\n_entity_ Create(_entity_ model);\n_entity_? Get(int id);\n" +
             "IQueryable<_entity_> Get();\n_entity_ Update(_entity_ model);\nvoid Delete(_entity_ model);\n}\n}";
+
+        public static string CsProjDomainXML => "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n" +
+            "<PropertyGroup>\n<TargetFramework>net6.0</TargetFramework>\n<ImplicitUsings>enable</ImplicitUsings>\n" +
+            "<Nullable>enable</Nullable>\n</PropertyGroup>\n\n</Project>\n";
+
+        public static string CsProjInfraXML = "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n" +
+            "<PropertyGroup>\n<TargetFramework>net6.0</TargetFramework>\n<ImplicitUsings>enable</ImplicitUsings>\n" +
+            "<Nullable>enable</Nullable>\n</PropertyGroup>\n\n" +
+            "<ItemGroup><PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"6.0.2\" />\n" +
+            "<PackageReference Include=\"Microsoft.EntityFrameworkCore.Design\" Version=\"6.0.2\">\n" +
+            "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>\n" +
+            "</PackageReference>\n<PackageReference Include=\"Microsoft.EntityFrameworkCore.Tools\" Version=\"6.0.2\">\n" +
+            "<PrivateAssets>all</PrivateAssets>\n<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>\n" +
+            "</PackageReference>\n<PackageReference Include=\"Pomelo.EntityFrameworkCore.MySql\" Version=\"6.0.1\" />\n</ItemGroup>\n\n" +
+            "ItemGroup>\n<ProjectReference Include=\"..\\_projectname_.Domain\\_projectname_.Domain.csproj\" />\n</ItemGroup>" +
+            "\n\n</Project>\n";
     }
 }
