@@ -40,6 +40,14 @@ namespace MinMaNet.Generator
         {
             var publicClass = "public class ";
             int index = module.LastIndexOf(publicClass);
+
+            if (index == -1)
+            {
+                publicClass = "public interface ";
+                index = module.LastIndexOf(publicClass);
+            }
+                
+
             int indexAfterName = module.IndexOf(" ", index + publicClass.Length);
             string moduleName = module[(index + publicClass.Length)..indexAfterName];
             return path + "/" + moduleName + ".cs";
