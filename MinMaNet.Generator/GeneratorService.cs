@@ -15,20 +15,21 @@ namespace MinMaNet.Generator
             throw new NotSupportedException();
         }
 
-        protected static string GenerateFiles(string project, string folder, List<string> classes)
+        protected static string GenerateFiles(string project, string folder, List<string> classes, string fileName = "")
         {
             string path = CreateFolder(project + folder, folderName);
 
-            classes.ForEach(module => IOService.GenerateFile(GetFilePath(path, module, project), module));
+            classes.ForEach(module => IOService.GenerateFile(
+                (string.IsNullOrEmpty(fileName)) ? GetFilePath(path, module, project) : string.Concat(path, "/", fileName),
+                module));
 
             path = IOService.ZipFiles(folderName, project);
 
-            path = GetZipPath(path);
 
             return path;
         }
 
-        private static string GetZipPath(string path)
+        protected static string GetZipPath(string path)
         {
             var folders = path.Split("\\");
             var indexFolderResource = Array.FindIndex(folders, s => s.ToLower().Equals("resources"));
@@ -46,7 +47,7 @@ namespace MinMaNet.Generator
                 publicClass = "public interface ";
                 index = module.LastIndexOf(publicClass);
             }
-                
+
 
             int indexAfterName = module.IndexOf(" ", index + publicClass.Length);
             string moduleName = module[(index + publicClass.Length)..indexAfterName];
