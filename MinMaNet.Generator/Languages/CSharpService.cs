@@ -12,6 +12,7 @@ namespace MinMaNet.Generator.Languages
             string dbSets = string.Empty;
             List<string> mappings = new();
             List<string> repositories = new();
+            List<string> interfaceRepositories = new();
 
             project.Classes.ForEach(eachClass =>
             {
@@ -21,15 +22,20 @@ namespace MinMaNet.Generator.Languages
                 GenerateProperties(eachClass.Properties, out string properties);
                 classes.Add(module.Replace("_properties_", properties));
 
-                //controllers
+                // controllers
                 var controller = ControllerModel.Replace("_projectname_", project.Title).Replace("_title_", eachClass.Title);
                 controllers.Add(controller);
 
+                // dbSets
                 dbSets += DbSetsContextModel.Replace("_entity_", eachClass.Title);
 
+                // mappings
                 mappings.Add(MappingModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
 
+                // repositories
                 repositories.Add(RepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
+
+                interfaceRepositories.Add(IRepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
             });
 
             string context = DbContextModel.Replace("_projectname_", project.Title).Replace("_dbSets_", dbSets);
@@ -39,6 +45,7 @@ namespace MinMaNet.Generator.Languages
             GenerateFiles(project.Title, "\\Generate\\Context", new List<string>() { context });
             GenerateFiles(project.Title, "\\Generate\\Mappings", mappings);
             GenerateFiles(project.Title, "\\Generate\\Repositories", repositories);
+            GenerateFiles(project.Title, "\\Generate\\Interfaces", interfaceRepositories);
 
             return filePathEntity;
         }
@@ -93,5 +100,9 @@ namespace MinMaNet.Generator.Languages
             "public _entity_ Update(_entity_ model)\n{\nvar entry = context.Entry(model);\nthis.context._entity_s.Attach(model);\n" +
             "entry.State = EntityState.Modified;\ncontext.SaveChanges();\nreturn model;\n}\n\n" +
             "public void Delete(_entity_ model)\n{\ncontext._entity_s.Remove(user);\ncontext.SaveChanges();\n}\n}\n}";
+
+        public static string IRepositoryModel => "using _projectname_.Entities;\n\nnamespace _projectname_.Infra.Interfaces\n{\n" +
+            "public interface I_entity_Repository \n{\n_entity_ Create(_entity_ model);\n_entity_? Get(int id);\n" +
+            "IQueryable<_entity_> Get();\n_entity_ Update(_entity_ model);\nvoid Delete(_entity_ model);\n}\n}";
     }
 }
