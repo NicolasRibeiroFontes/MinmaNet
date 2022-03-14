@@ -38,7 +38,7 @@ namespace MinMaNet.API.Configurations
 			app.UseSwagger();
 			app.UseSwaggerUI(c => {
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "MinMaNet v1");
-				c.RoutePrefix = "";
+				c.RoutePrefix = "documentation";
 			});
 		}
 	}

@@ -27,18 +27,18 @@ namespace MinMaNet.API.Controllers
 		/// Endpoint to generate a zip file with the models created
 		/// </summary>
 		/// <param name="parameters"></param>
-		/// <param name="file">JSON file from the Mind Map tools</param>
+		/// <param name="files">JSON file from the Mind Map tools</param>
 		/// <returns>An URL to download the zip file with the files created.</returns>
 		[HttpPost]
-		public async Task<IActionResult> Generate([FromQuery] GenerateParameters parameters, IFormFile file)
+		public async Task<IActionResult> Generate([FromQuery] GenerateParameters parameters, [FromForm] IEnumerable<IFormFile> files)
 		{
-			if (file == null)
+			if (files.Count() == 0)
 				return BadRequest("File not uploaded");
 
 			IdentifySourceTool(parameters.Tool);
 			IdentifyLanguage(parameters.Tool);
 
-			var project = await reader.GenerateCommonModelFromJsonFile(file);
+			var project = await reader.GenerateCommonModelFromJsonFile(files.First());
 			var filePath = generator.Generate(project);
 
 			return Ok(GetFilePathToDownload(filePath));
