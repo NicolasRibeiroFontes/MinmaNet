@@ -3,6 +3,8 @@
 @using System.Text.Json
 @inject IHttpClientFactory ClientFactory
 @inject IJSRuntime jsRuntime
+@inject NavigationManager Navigator
+
 
 <PageTitle>Generate your project</PageTitle>
 
@@ -26,7 +28,7 @@
         content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
         var client = ClientFactory.CreateClient();
 
-        var response = await client.PostAsync("https://localhost:5001/api/Projects?tool=1", content);
+        var response = await client.PostAsync(Navigator.BaseUri+"api/Projects?tool=1", content);
 
         if (response.IsSuccessStatusCode)
         {
