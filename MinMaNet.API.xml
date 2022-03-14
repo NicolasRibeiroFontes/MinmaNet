@@ -4,12 +4,12 @@
         <name>MinMaNet.API</name>
     </assembly>
     <members>
-        <member name="M:MinMaNet.API.Controllers.ProjectsController.Generate(MinMaNet.Domain.Core.GenerateParameters,Microsoft.AspNetCore.Http.IFormFile)">
+        <member name="M:MinMaNet.API.Controllers.ProjectsController.Generate(MinMaNet.Domain.Core.GenerateParameters,System.Collections.Generic.IEnumerable{Microsoft.AspNetCore.Http.IFormFile})">
             <summary>
             Endpoint to generate a zip file with the models created
             </summary>
             <param name="parameters"></param>
-            <param name="file">JSON file from the Mind Map tools</param>
+            <param name="files">JSON file from the Mind Map tools</param>
             <returns>An URL to download the zip file with the files created.</returns>
         </member>
     </members>
