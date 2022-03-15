@@ -11,7 +11,7 @@ namespace MinMaNet.Tests.Generator
     [TestClass]
     public class CSharpServiceTest
     {
-        private readonly Mock<CSharpService> generatorService = new();
+        private readonly Mock<CSharpService> generatorService = new() { CallBase = true, };
         private readonly CSharpService cSharpService = new();
         private readonly Project projectSuccess = new("Success",
             new List<Class> { 
@@ -24,14 +24,14 @@ namespace MinMaNet.Tests.Generator
         public void Initialize()
         {
             generatorService.Setup(x => x.GenerateFiles(
-                "Success", It.IsAny<string>(), It.IsAny<List<(string content, string fileName)>>()))
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<(string content, string fileName)>>()))
                 .Returns("Resources\\Projects\\Success.zip");
         }
 
         [TestMethod]
         public void ShouldGenerateWithNoError()
-        {
-            var result = cSharpService.Generate(projectSuccess);
+        {   
+            var result = generatorService.Object.Generate(projectSuccess);
             Assert.IsNotNull(result);
             Assert.AreEqual($"Resources\\Projects\\{projectSuccess.Title}.zip", result);
         }
