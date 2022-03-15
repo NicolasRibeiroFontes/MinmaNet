@@ -7,48 +7,50 @@ namespace MinMaNet.Generator.Languages
     {
         public override string Generate(Project project)
         {
-            List<string> classes = new();
-            List<string> controllers = new();
+            List<(string content, string fileName)> classes = new();
+            List<(string content, string fileName)> controllers = new();
             string dbSets = string.Empty;
-            List<string> mappings = new();
-            List<string> repositories = new();
-            List<string> interfaceRepositories = new();
+            List<(string content, string fileName)> mappings = new();
+            List<(string content, string fileName)> repositories = new();
+            List<(string content, string fileName)> interfaceRepositories = new();
 
             project.Classes.ForEach(eachClass =>
             {
                 // entities
                 var module = EntityModel.Replace("_projectname_", project.Title).Replace("_title_", eachClass.Title);
-
-                GenerateProperties(eachClass.Properties, out string properties);
-                classes.Add(module.Replace("_properties_", properties));
+                module = module.Replace("_properties_", GenerateProperties(eachClass.Properties));
+                classes.Add((module, GetFileName(module)));
 
                 // controllers
                 var controller = ControllerModel.Replace("_projectname_", project.Title).Replace("_title_", eachClass.Title);
-                controllers.Add(controller);
+                controllers.Add((controller, GetFileName(controller)));
 
                 // dbSets
                 dbSets += DbSetsContextModel.Replace("_entity_", eachClass.Title);
 
                 // mappings
-                mappings.Add(MappingModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
+                var map = MappingModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title);
+                mappings.Add((map, GetFileName(map)));
 
                 // repositories
-                repositories.Add(RepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
+                var repository = RepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title);
+                repositories.Add((repository, GetFileName(repository)));
 
-                interfaceRepositories.Add(IRepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title));
+                var interfaceRepository = IRepositoryModel.Replace("_projectname_", project.Title).Replace("_entity_", eachClass.Title);
+                interfaceRepositories.Add((interfaceRepository, GetFileName(interfaceRepository)));
             });
 
             string context = DbContextModel.Replace("_projectname_", project.Title).Replace("_dbSets_", dbSets);
 
-            var filePathEntity = GenerateFiles(project.Title, "\\Generate\\Domain\\Entities", classes);
+            var filePathEntity = GenerateFiles(project.Title, "\\Generate\\Domain\\Entities", classes) ;
             GenerateFiles(project.Title, "\\Generate\\API\\Controllers", controllers);
-            GenerateFiles(project.Title, "\\Generate\\Infra\\Context", new List<string>() { context });
+            GenerateFiles(project.Title, "\\Generate\\Infra\\Context", new List<(string content, string fileName)> { (context, GetFileName(context)) });
             GenerateFiles(project.Title, "\\Generate\\Infra\\Mappings", mappings);
             GenerateFiles(project.Title, "\\Generate\\Infra\\Repositories", repositories);
             GenerateFiles(project.Title, "\\Generate\\Domain\\Interfaces", interfaceRepositories);
 
-            GenerateFiles(project.Title, "\\Generate\\Domain", new List<string>() { CsProjDomainXML }, project.Title+".Domain.csproj");
-            GenerateFiles(project.Title, "\\Generate\\Infra", new List<string>() { CsProjInfraXML }, project.Title + ".Infra.csproj");
+            GenerateFiles(project.Title, "\\Generate\\Domain", new List<(string content, string fileName)>() { (CsProjDomainXML, project.Title + ".Domain.csproj") });
+            GenerateFiles(project.Title, "\\Generate\\Infra", new List<(string content, string fileName)>() { (CsProjInfraXML, project.Title + ".Infra.csproj") });
 
 
             filePathEntity = GetZipPath(filePathEntity);
@@ -56,13 +58,29 @@ namespace MinMaNet.Generator.Languages
             return filePathEntity;
         }
 
-
-
-        private static void GenerateProperties(List<Property> properties, out string propertiesGenerated)
+        private static string GetFileName(string content)
         {
-            propertiesGenerated = string.Empty;
+            var publicClass = "public class ";
+            int index = content.LastIndexOf(publicClass);
+
+            if (index == -1)
+            {
+                publicClass = "public interface ";
+                index = content.LastIndexOf(publicClass);
+            }
+
+            int indexAfterName = content.IndexOf(" ", index + publicClass.Length);
+            string moduleName = content[(index + publicClass.Length)..indexAfterName];
+            return moduleName + ".cs";
+        }
+
+        private static string GenerateProperties(List<Property> properties)
+        {
+            string propertiesGenerated = string.Empty;
             foreach (var property in properties)
              propertiesGenerated += PropertiesModel.Replace("_type_", property.Type).Replace("_name_", property.Title);
+
+            return propertiesGenerated;
         }
 
         private static string EntityModel => "using System;\n\nnamespace _projectname_.Entities\n{\n" +

@@ -15,16 +15,13 @@ namespace MinMaNet.Generator
             throw new NotSupportedException();
         }
 
-        protected static string GenerateFiles(string project, string folder, List<string> classes, string fileName = "")
+        protected static string GenerateFiles(string project, string folder, List<(string content, string fileName)> classes)
         {
             string path = CreateFolder(project + folder, folderName);
 
-            classes.ForEach(module => IOService.GenerateFile(
-                (string.IsNullOrEmpty(fileName)) ? GetFilePath(path, module, project) : string.Concat(path, "/", fileName),
-                module));
+            classes.ForEach(module => IOService.GenerateFile( string.Concat(path, "/", module.fileName), module.content));
 
             path = IOService.ZipFiles(folderName, project);
-
 
             return path;
         }
