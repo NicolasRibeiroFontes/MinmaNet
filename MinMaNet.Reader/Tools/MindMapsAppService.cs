@@ -32,14 +32,19 @@ namespace MinMaNet.Reader.Tools
 
 		private static void Validate()
 		{
-			//All properties must to have a type
+			if (mindMup.MindMap.Root.Children.Count == 0)
+				throw new Exception($"The project has no module defined");
+			
 			mindMup.MindMap.Root.Children.ForEach(classes =>
 			{
+				if (classes.Children.Count == 0)
+					throw new Exception($"The module {classes.Text.Caption} has no properties defined");
+
 				classes.Children.ForEach(properties =>
 				{
 					if (properties.Children.Count != 1)
-						throw new Exception("All the properties must to have only 1 type (children)! " +
-							"Error with the property: " + properties.Text.Caption);
+						throw new Exception($"All the properties must to have only 1 type! " +
+							$"Error with the property: {classes.Text.Caption}.{properties.Text.Caption}");
 				});
 			});
 		}

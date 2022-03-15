@@ -14,6 +14,9 @@ namespace MinMaNet.Generator.Languages
             List<(string content, string fileName)> repositories = new();
             List<(string content, string fileName)> interfaceRepositories = new();
 
+            if (project.Classes.Count == 0)
+                throw new System.Exception("There is no class for this project");
+
             project.Classes.ForEach(eachClass =>
             {
                 // entities
@@ -128,15 +131,15 @@ namespace MinMaNet.Generator.Languages
             "entry.State = EntityState.Modified;\ncontext.SaveChanges();\nreturn model;\n}\n\n" +
             "public void Delete(_entity_ model)\n{\ncontext._entity_s.Remove(user);\ncontext.SaveChanges();\n}\n}\n}";
 
-        public static string IRepositoryModel => "using _projectname_.Entities;\n\nnamespace _projectname_.Infra.Interfaces\n{\n" +
+        private static string IRepositoryModel => "using _projectname_.Entities;\n\nnamespace _projectname_.Infra.Interfaces\n{\n" +
             "public interface I_entity_Repository \n{\n_entity_ Create(_entity_ model);\n_entity_? Get(int id);\n" +
             "IQueryable<_entity_> Get();\n_entity_ Update(_entity_ model);\nvoid Delete(_entity_ model);\n}\n}";
 
-        public static string CsProjDomainXML => "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n" +
+        private static string CsProjDomainXML => "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n" +
             "<PropertyGroup>\n<TargetFramework>net6.0</TargetFramework>\n<ImplicitUsings>enable</ImplicitUsings>\n" +
             "<Nullable>enable</Nullable>\n</PropertyGroup>\n\n</Project>\n";
 
-        public static string CsProjInfraXML = "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n" +
+        private static readonly string CsProjInfraXML = "<Project Sdk=\"Microsoft.NET.Sdk\">\n\n" +
             "<PropertyGroup>\n<TargetFramework>net6.0</TargetFramework>\n<ImplicitUsings>enable</ImplicitUsings>\n" +
             "<Nullable>enable</Nullable>\n</PropertyGroup>\n\n" +
             "<ItemGroup><PackageReference Include=\"Microsoft.EntityFrameworkCore\" Version=\"6.0.2\" />\n" +

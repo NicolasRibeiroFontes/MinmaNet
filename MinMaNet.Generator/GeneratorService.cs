@@ -15,7 +15,7 @@ namespace MinMaNet.Generator
             throw new NotSupportedException();
         }
 
-        protected static string GenerateFiles(string project, string folder, List<(string content, string fileName)> classes)
+        public virtual string GenerateFiles(string project, string folder, List<(string content, string fileName)> classes)
         {
             string path = CreateFolder(project + folder, folderName);
 
@@ -34,22 +34,6 @@ namespace MinMaNet.Generator
             return string.Join("\\", folders, indexFolderResource, 3);
         }
 
-        private static string GetFilePath(string path, string module, string project)
-        {
-            var publicClass = "public class ";
-            int index = module.LastIndexOf(publicClass);
-
-            if (index == -1)
-            {
-                publicClass = "public interface ";
-                index = module.LastIndexOf(publicClass);
-            }
-
-
-            int indexAfterName = module.IndexOf(" ", index + publicClass.Length);
-            string moduleName = module[(index + publicClass.Length)..indexAfterName];
-            return path + "/" + moduleName + ".cs";
-        }
 
         private static string CreateFolder(string projectName, string folderName)
         {
