@@ -15,7 +15,7 @@ namespace MinMaNet.Generator
             throw new NotSupportedException();
         }
 
-        protected static string GenerateFiles(string project, string folder, List<(string content, string fileName)> classes)
+        public virtual string GenerateFiles(string project, string folder, List<(string content, string fileName)> classes)
         {
             string path = CreateFolder(project + folder, folderName);
 

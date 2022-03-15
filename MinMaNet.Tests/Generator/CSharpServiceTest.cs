@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MinMaNet.Domain.Models;
+using MinMaNet.Generator;
 using MinMaNet.Generator.Languages;
+using Moq;
 using System;
 using System.Collections.Generic;
 
@@ -9,6 +11,7 @@ namespace MinMaNet.Tests.Generator
     [TestClass]
     public class CSharpServiceTest
     {
+        private readonly Mock<CSharpService> generatorService = new();
         private readonly CSharpService cSharpService = new();
         private readonly Project projectSuccess = new("Success",
             new List<Class> { 
@@ -16,6 +19,14 @@ namespace MinMaNet.Tests.Generator
                 new Class("Class2", new List<Property> { new Property("Prop2", "Type2") }),
             });
         private readonly Project projectFailureNoClass = new("Fail", null);
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            generatorService.Setup(x => x.GenerateFiles(
+                "Success", It.IsAny<string>(), It.IsAny<List<(string content, string fileName)>>()))
+                .Returns("Resources\\Projects\\Success.zip");
+        }
 
         [TestMethod]
         public void ShouldGenerateWithNoError()
