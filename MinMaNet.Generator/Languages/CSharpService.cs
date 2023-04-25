@@ -45,7 +45,7 @@ namespace MinMaNet.Generator.Languages
 
             string context = DbContextModel.Replace("_projectname_", project.Title).Replace("_dbSets_", dbSets);
 
-            var filePathEntity = GenerateFiles(project.Title, "\\Generate\\Domain\\Entities", classes) ;
+            var filePathEntity = GenerateFiles(project.Title, "/Generate/Domain/Entities", classes) ;
             GenerateFiles(project.Title, @"/Generate/API/Controllers", controllers);
             GenerateFiles(project.Title, @"/Generate/Infra/Context", new List<(string content, string fileName)> { (context, GetFileName(context)) });
             GenerateFiles(project.Title, @"/Generate/Infra/Mappings", mappings);
@@ -54,7 +54,6 @@ namespace MinMaNet.Generator.Languages
 
             GenerateFiles(project.Title, @"/Generate/Domain", new List<(string content, string fileName)>() { (CsProjDomainXML, project.Title + ".Domain.csproj") });
             GenerateFiles(project.Title, @"/Generate/Infra", new List<(string content, string fileName)>() { (CsProjInfraXML, project.Title + ".Infra.csproj") });
-
 
             filePathEntity = GetZipPath(filePathEntity);
 
