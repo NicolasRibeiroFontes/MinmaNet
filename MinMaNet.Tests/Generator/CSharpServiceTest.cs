@@ -25,7 +25,7 @@ namespace MinMaNet.Tests.Generator
         {
             generatorService.Setup(x => x.GenerateFiles(
                 It.IsAny<string>(), It.IsAny<string>(), It.IsAny<List<(string content, string fileName)>>()))
-                .Returns("Resources\\Projects\\Success.zip");
+                .Returns("Resources/Projects/Success.zip");
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace MinMaNet.Tests.Generator
         {   
             var result = generatorService.Object.Generate(projectSuccess);
             Assert.IsNotNull(result);
-            Assert.AreEqual($"Resources\\Projects\\{projectSuccess.Title}.zip", result);
+            Assert.AreEqual($"Resources/Projects/{projectSuccess.Title}.zip", result);
         }
 
         [TestMethod]
