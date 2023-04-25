@@ -17,7 +17,7 @@ namespace MinMaNet.Generator
 
         internal static string ZipFiles(string path, string projectName)
         {
-            var filePath = path + "\\" + projectName;
+            var filePath = path + "\\/" + projectName;
             if (File.Exists(filePath + ".zip"))
                 File.Delete(filePath + ".zip");
 
