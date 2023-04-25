@@ -28,10 +28,10 @@ namespace MinMaNet.Generator
 
         protected static string GetZipPath(string path)
         {
-            var folders = path.Split("\\");
+            var folders = path.Split("/");
             var indexFolderResource = Array.FindIndex(folders, s => s.ToLower().Equals("resources"));
 
-            return string.Join("\\", folders, indexFolderResource, 3);
+            return string.Join("/", folders, indexFolderResource, 3);
         }
 
 
